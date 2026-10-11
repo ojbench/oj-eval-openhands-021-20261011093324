@@ -66,9 +66,9 @@ int main() {
     
     long long total_rectangles = 0;
     
-    // Use O(n^2) approach for now - it's correct and should work for reasonable constraints
-    // The key insight is that we need to check all pairs (i,j) where i < j and y_i < y_j
-    // and verify there are no points k with i < k < j and y_i <= y_k <= y_j
+    // Simple and correct O(n^2) algorithm
+    // For each pair of points (i,j) with i < j and y_i < y_j,
+    // check if there are any points k with i < k < j and y_i <= y_k <= y_j
     
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
@@ -76,7 +76,6 @@ int main() {
             int y2 = points[j].y;
             
             if (y2 > y1) {
-                // Check if there are any points between i and j with y in [y1, y2]
                 bool has_blocking = false;
                 for (int k = i + 1; k < j; k++) {
                     if (points[k].y >= y1 && points[k].y <= y2) {
