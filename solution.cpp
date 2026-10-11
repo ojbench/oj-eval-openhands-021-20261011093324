@@ -73,10 +73,13 @@ int main() {
             int y2 = points[j].y;
             
             if (y2 > y1) {
-                // Check if there are any points between (x1,y1) and (x2,y2)
+                // Check if there are any points inside or on the boundary of the rectangle
+                // formed by (x1,y1) and (x2,y2), excluding the corners themselves
                 bool has_blocking = false;
                 for (int k = i + 1; k < j; k++) {
-                    if (points[k].y > y1 && points[k].y < y2) {
+                    int yk = points[k].y;
+                    // Point k is inside or on boundary if y1 <= yk <= y2
+                    if (y1 <= yk && yk <= y2) {
                         has_blocking = true;
                         break;
                     }
