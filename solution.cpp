@@ -31,7 +31,6 @@ public:
 
 struct Point {
     int x, y;
-    int original_idx;
     
     bool operator<(const Point& other) const {
         return x < other.x;
@@ -50,7 +49,6 @@ int main() {
     
     for (int i = 0; i < n; i++) {
         cin >> points[i].x >> points[i].y;
-        points[i].original_idx = i;
         y_coords[i] = points[i].y;
     }
     
@@ -66,38 +64,27 @@ int main() {
     // Sort points by x-coordinate
     sort(points.begin(), points.end());
     
-    // Map original index to sorted position
-    vector<int> pos_in_sorted(n);
-    for (int i = 0; i < n; i++) {
-        pos_in_sorted[points[i].original_idx] = i;
-    }
-    
     long long total_rectangles = 0;
     
-    // Process each point as potential bottom-left corner
+    // Simple O(n^2) solution - check all pairs
     for (int i = 0; i < n; i++) {
-        int y1 = points[i].y;
-        int y1_idx = y_to_idx[y1];
-        
-        FenwickTree bit(y_coords.size());
-        
-        // Add all points to the right of current point
         for (int j = i + 1; j < n; j++) {
+            int y1 = points[i].y;
             int y2 = points[j].y;
-            int y2_idx = y_to_idx[y2];
             
             if (y2 > y1) {
-                // Check if there are any points between y1 and y2
-                int points_between = bit.range_query(y1_idx + 1, y2_idx - 1);
-                
-                if (points_between == 0) {
-                    // This forms a valid rectangle
+                // Check if there are any points between (x1,y1) and (x2,y2)
+                bool has_blocking = false;
+                for (int k = i + 1; k < j; k++) {
+                    if (points[k].y > y1 && points[k].y < y2) {
+                        has_blocking = true;
+                        break;
+                    }
+                }
+                if (!has_blocking) {
                     total_rectangles++;
                 }
             }
-            
-            // Add current point to BIT
-            bit.update(y2_idx, 1);
         }
     }
     
