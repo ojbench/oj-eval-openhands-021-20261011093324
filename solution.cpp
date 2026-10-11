@@ -66,20 +66,20 @@ int main() {
     
     long long total_rectangles = 0;
     
-    // Simple O(n^2) solution - check all pairs
+    // Use O(n^2) approach for now - it's correct and should work for reasonable constraints
+    // The key insight is that we need to check all pairs (i,j) where i < j and y_i < y_j
+    // and verify there are no points k with i < k < j and y_i <= y_k <= y_j
+    
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
             int y1 = points[i].y;
             int y2 = points[j].y;
             
             if (y2 > y1) {
-                // Check if there are any points inside or on the boundary of the rectangle
-                // formed by (x1,y1) and (x2,y2), excluding the corners themselves
+                // Check if there are any points between i and j with y in [y1, y2]
                 bool has_blocking = false;
                 for (int k = i + 1; k < j; k++) {
-                    int yk = points[k].y;
-                    // Point k is inside or on boundary if y1 <= yk <= y2
-                    if (y1 <= yk && yk <= y2) {
+                    if (points[k].y >= y1 && points[k].y <= y2) {
                         has_blocking = true;
                         break;
                     }
